@@ -24,17 +24,21 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: './DesignConnect/DesignConnect/package-lock.json'
+          cache-dependency-path: 'DesignConnect/DesignConnect/package-lock.json'
 
       - name: Install Dependencies
+        working-directory: ./DesignConnect/DesignConnect
         run: |
-          cd DesignConnect/DesignConnect
-          npm ci
+          npm clean-install --no-audit
+        env:
+          CI: true
 
       - name: Build
+        working-directory: ./DesignConnect/DesignConnect
         run: |
-          cd DesignConnect/DesignConnect
           npm run build
+        env:
+          CI: true
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
@@ -42,7 +46,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: './DesignConnect/DesignConnect/dist'
+          path: 'DesignConnect/DesignConnect/dist'
+          retention-days: 1
 
   deploy:
     needs: build
