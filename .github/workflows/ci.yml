@@ -17,24 +17,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: 'DesignConnect/DesignConnect/package-lock.json'
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            DesignConnect/DesignConnect/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('DesignConnect/DesignConnect/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install Dependencies
-        working-directory: ./DesignConnect/DesignConnect
+        working-directory: DesignConnect/DesignConnect
         run: |
-          npm clean-install --no-audit
+          npm ci --prefer-offline --no-audit
         env:
           CI: true
 
       - name: Build
-        working-directory: ./DesignConnect/DesignConnect
+        working-directory: DesignConnect/DesignConnect
         run: |
           npm run build
         env:
@@ -43,10 +54,14 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
+      - name: Check build output
+        run: |
+          ls -la DesignConnect/DesignConnect/dist
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: 'DesignConnect/DesignConnect/dist'
+          path: DesignConnect/DesignConnect/dist
           retention-days: 1
 
   deploy:
