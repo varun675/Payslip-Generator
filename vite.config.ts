@@ -38,6 +38,7 @@ export default defineConfig({
     // Ensure assets are properly referenced
     assetsDir: "assets",
   },
+  publicDir: path.resolve(__dirname, "client/public"),
   server: {
     fs: {
       strict: true,

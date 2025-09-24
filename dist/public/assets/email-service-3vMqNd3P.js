@@ -1,0 +1,1 @@
+async function s(t,n){const a=new FormData;a.append("emailData",JSON.stringify(t)),a.append("payslip",n,"payslip.pdf");const e=await fetch("/api/send-email",{method:"POST",body:a});if(!e.ok){const o=await e.json();throw new Error(o.message||"Failed to send email")}return e.json()}export{s as sendEmailWithAttachment};

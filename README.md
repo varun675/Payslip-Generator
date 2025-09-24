@@ -116,6 +116,7 @@ When deployed to GitHub Pages (static hosting):
 - PDF generation and download functionality works normally
 - Email functionality is replaced with direct PDF download
 - All features work client-side without requiring a backend server
+- SPA routing is handled via 404.html redirect for GitHub Pages compatibility
 
 ## Contributing
 

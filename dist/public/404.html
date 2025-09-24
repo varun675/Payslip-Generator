@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payslip Generator</title>
+    <script>
+        // GitHub Pages SPA redirect
+        // This script takes the current URL and redirects to the index page
+        // with the path as a query parameter that can be handled by the router
+        (function() {
+            var redirect = sessionStorage.redirect;
+            delete sessionStorage.redirect;
+            if (redirect && redirect != location.href) {
+                history.replaceState(null, null, redirect);
+            }
+        })();
+        
+        // Redirect to index.html for SPA routing
+        window.location.replace('/Payslip-Generator/');
+    </script>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
+</html>
