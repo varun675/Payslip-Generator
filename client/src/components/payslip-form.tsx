@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, X } from "lucide-react";
-import { EarningDeduction } from "../../../shared/schema";
+import { EarningDeduction } from "@shared/schema";
 
 const payslipFormSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
