@@ -11,12 +11,12 @@ export default defineConfig({
   base: process.env.NODE_ENV === "production" ? "/Payslip-Generator/" : "/",
   plugins: [
     react(),
-    ...(process.env.NODE_ENV !== "production" 
+    // Only include Replit plugins if we're actually in a Replit environment
+    ...(process.env.NODE_ENV !== "production" && process.env.REPL_ID
       ? [runtimeErrorOverlay()]
       : []
     ),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
+    ...(process.env.NODE_ENV !== "production" && process.env.REPL_ID
       ? [
           await import("@replit/vite-plugin-cartographer").then((m) =>
             m.cartographer(),
