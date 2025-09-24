@@ -4,9 +4,14 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
+  // Set base path for GitHub Pages deployment
+  base: process.env.NODE_ENV === "production" ? "/Payslip-Generator/" : "/",
   plugins: [
     react(),
-    runtimeErrorOverlay(),
+    ...(process.env.NODE_ENV !== "production" 
+      ? [runtimeErrorOverlay()]
+      : []
+    ),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
@@ -27,6 +32,8 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    // Ensure assets are properly referenced
+    assetsDir: "assets",
   },
   server: {
     fs: {

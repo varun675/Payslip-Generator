@@ -3,7 +3,7 @@ import { PayslipForm } from "@/components/payslip-form";
 import { PayslipPreview } from "@/components/payslip-preview";
 import { EmailForm } from "@/components/email-form";
 import { generatePayslipPDF, generatePayslipPDFBlob } from "@/lib/pdf-generator";
-import { sendEmailWithAttachment } from "@/lib/email-service";
+// Import will be handled dynamically in the function
 import { useToast } from "@/hooks/use-toast";
 import { EarningDeduction } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -70,7 +70,17 @@ export default function PayslipGenerator() {
   };
 
   const handleSendEmail = async (emailData: any, pdfBlob: Blob) => {
-    await sendEmailWithAttachment(emailData, pdfBlob);
+    // Dynamically import the appropriate email service based on environment
+    const env = (import.meta as any).env;
+    const isStaticBuild = env?.VITE_STATIC_BUILD === 'true' || env?.PROD;
+    
+    if (isStaticBuild) {
+      const { sendEmailWithAttachment } = await import("@/lib/email-service.static");
+      await sendEmailWithAttachment(emailData, pdfBlob);
+    } else {
+      const { sendEmailWithAttachment } = await import("@/lib/email-service");
+      await sendEmailWithAttachment(emailData, pdfBlob);
+    }
   };
 
   return (

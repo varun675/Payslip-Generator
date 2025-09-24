@@ -1,4 +1,4 @@
-name: CI/CD
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -12,57 +12,40 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          submodules: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: 'npm'
 
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            DesignConnect/DesignConnect/node_modules
-            ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('DesignConnect/DesignConnect/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Install Dependencies
-        working-directory: DesignConnect/DesignConnect
-        run: |
-          npm ci --prefer-offline --no-audit
+      - name: Build frontend
+        run: npm run build:frontend
         env:
-          CI: true
-
-      - name: Build
-        working-directory: DesignConnect/DesignConnect
-        run: |
-          npm run build
-        env:
-          CI: true
+          NODE_ENV: production
+          VITE_STATIC_BUILD: true
 
       - name: Setup Pages
-        uses: actions/configure-pages@v3
-
-      - name: Check build output
-        run: |
-          ls -la DesignConnect/DesignConnect/dist
+        uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: DesignConnect/DesignConnect/dist
-          retention-days: 1
+          path: ./dist/public
 
   deploy:
     needs: build
@@ -74,4 +57,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
